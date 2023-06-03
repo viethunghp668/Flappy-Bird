@@ -2183,7 +2183,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991070508}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 6, y: 0, z: 0}
+  m_LocalPosition: {x: 6, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2203,11 +2203,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitTime: 1.5
-  obstaclePrefabs:
-  - {fileID: 1556402544744368, guid: 3420925d93c729a48bb3705653b55702, type: 3}
-  - {fileID: 1559013965715528, guid: e161e893614291a4f901af2beb8ba3f7, type: 3}
-  - {fileID: 1605059603028916, guid: a8e61c5448eed224db90a8f4df1c01a0, type: 3}
-  - {fileID: 1245435645037764, guid: c146c4e9728549d49acf16ab2faffc86, type: 3}
+  difficultRange: 2
+  easyRange: 0.5
+  obstaclePrefab: {fileID: 1556402544744368, guid: 3420925d93c729a48bb3705653b55702,
+    type: 3}
 --- !u!61 &1991070511
 BoxCollider2D:
   m_ObjectHideFlags: 0

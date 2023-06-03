@@ -1,15 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObstacleSpawner : MonoBehaviour {
 
-	[SerializeField] private float waitTime;
-	[SerializeField] private GameObject[] obstaclePrefabs;
-	private float tempTime;
+	[SerializeField] private float waitTime, difficultRange = 2f, easyRange = 0.5f;
+	[SerializeField] private GameObject obstaclePrefab;
+	private float tempTime, previousPipeHeight;
+	private int difficultyCounter = -1;
+	private float[] difficultyLevelArr = {0, 0, 0, 1, 1};
+	// 0  is easy, 1 is hard
 
 	void Start(){
 		tempTime = waitTime - Time.deltaTime;
+		difficultyCounter = -1;
+		previousPipeHeight = transform.position.y;
 	}
 
 	void LateUpdate () {
@@ -18,7 +24,9 @@ public class ObstacleSpawner : MonoBehaviour {
 			if(tempTime > waitTime){
 				// Wait for some time, create an obstacle, then set wait time to 0 and start again
 				tempTime = 0;
-				GameObject pipeClone = Instantiate(obstaclePrefabs[Random.Range(0, obstaclePrefabs.Length)], transform.position, transform.rotation);
+				Vector3 pipePos = transform.position;
+				previousPipeHeight = pipePos.y = CalculatePipeHeight();
+				GameObject pipeClone = Instantiate(obstaclePrefab, pipePos, transform.rotation);
 			}
 		}
 	}
@@ -29,6 +37,21 @@ public class ObstacleSpawner : MonoBehaviour {
 		}else{
 			Destroy(col.gameObject);
 		}
+	}
+
+	float CalculatePipeHeight() { 
+		difficultyCounter++;
+
+		if(difficultyCounter >= difficultyLevelArr.Length || difficultyCounter < 0)
+			difficultyCounter = 0;
+
+		float previousHeightDirection = previousPipeHeight / Mathf.Abs(previousPipeHeight);
+		float currentDifficultyLevel = difficultyLevelArr[difficultyCounter];
+
+		float heightOffset = UnityEngine.Random.Range(0 + (easyRange * currentDifficultyLevel), easyRange + (difficultRange * currentDifficultyLevel));
+		float newHeight = previousPipeHeight + (heightOffset * -previousHeightDirection);
+
+		return newHeight;
 	}
 
 }
