@@ -5,10 +5,11 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField] private float thrust, minTiltSmooth, maxTiltSmooth, hoverDistance, hoverSpeed;
-	private bool start;
+	private bool start, isDead = false;
 	private float timer, tiltSmooth, y;
 	private Rigidbody2D playerRigid;
 	private Quaternion downRotation, upRotation;
+	[SerializeField] private SpriteRenderer playerSpriteRenderer;
 
 	void Start () {
 		tiltSmooth = maxTiltSmooth;
@@ -78,10 +79,26 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	public void KillPlayer () {
+		if(isDead) return;
+		isDead = true;
+		StartCoroutine(SetGrayScaleGradually());
 		GameManager.Instance.EndGame ();
 		playerRigid.velocity = Vector2.zero;
 		// Stop the flapping animation
 		GetComponent<Animator> ().enabled = false;
+	}
+
+	IEnumerator SetGrayScaleGradually() { 
+		float elapsedTime = 0f;
+        float phaseDuration = 1f;
+        float percentComplete = elapsedTime / phaseDuration;
+        while (percentComplete < 1) {
+			float currentGrayScaleRatio = Mathf.Lerp(1, 0, percentComplete);
+            playerSpriteRenderer.material.SetFloat("_GrayScaleRatio", currentGrayScaleRatio);
+            elapsedTime += Time.deltaTime;
+            percentComplete = elapsedTime / phaseDuration;
+            yield return null;
+        }
 	}
 
 }
