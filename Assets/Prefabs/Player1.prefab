@@ -126,6 +126,8 @@ MonoBehaviour:
   maxTiltSmooth: 5
   hoverDistance: 0.1
   hoverSpeed: 5
+  jumpForce: 1.2
+  gravity: 0.7
   playerSpriteRenderer: {fileID: 212882205146042712}
 --- !u!50 &50947411552664758
 Rigidbody2D:

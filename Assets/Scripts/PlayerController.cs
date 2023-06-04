@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
 	[SerializeField] private float thrust, minTiltSmooth, maxTiltSmooth, hoverDistance, hoverSpeed;
+	[SerializeField] private float jumpForce = 1.2f, gravity = 0.7f;
 	private bool start, isDead = false;
 	private float timer, tiltSmooth, y;
 	private Rigidbody2D playerRigid;
@@ -33,6 +34,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void LateUpdate () {
+		if(isDead) return;
+		Vector3 velocity = transform.position;
+		velocity.y -= gravity * Time.deltaTime;
 		if (GameManager.Instance.GameState ()) {
 			if (Input.GetMouseButtonDown (0)) {
 				if(!start){
@@ -41,20 +45,22 @@ public class PlayerController : MonoBehaviour {
 					GameManager.Instance.GetReady ();
 					GetComponent<Animator>().speed = 2;
 				}
-				playerRigid.gravityScale = 1f;
+				// playerRigid.gravityScale = 1f;
 				tiltSmooth = minTiltSmooth;
 				transform.rotation = upRotation;
 				playerRigid.velocity = Vector2.zero;
+				velocity.y += jumpForce;
 				// Push the player upwards
-				playerRigid.AddForce (Vector2.up * thrust);
+				// playerRigid.AddForce (Vector2.up * thrust);
 				SoundManager.Instance.PlayTheAudio("Flap");
 			}
 		}
 		if (playerRigid.velocity.y < -1f) {
 			// Increase gravity so that downward motion is faster than upward motion
 			tiltSmooth = maxTiltSmooth;
-			playerRigid.gravityScale = 2f;
+			// playerRigid.gravityScale = 2f;
 		}
+		transform.position = velocity;
 	}
 
 	void OnTriggerEnter2D (Collider2D col) {
